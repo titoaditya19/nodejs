@@ -167,7 +167,7 @@ router.delete('/deleteProvincesById', (req, res) => {
                 data : result
             }
         res.send(response)
-}
+        }
             
         
     })
