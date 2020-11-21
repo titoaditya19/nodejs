@@ -8,10 +8,10 @@ var connection = mysql.createConnection({
 
 connection.connect((err) => {
     if (!err) {
-        console.log("koneksi DB OK");
+        console.log("DB Connection Success");
 
     } else {
-        console.log("koneksi DB Error")
+        console.log("Koneksi DB Error")
     }
 })
 
