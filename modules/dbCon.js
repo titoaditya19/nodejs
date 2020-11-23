@@ -1,18 +1,28 @@
-var mysql = require('mysql');
-var connection = mysql.createConnection({
-    host: '104.154.173.130',
-    user: 'root',
-    password: 'Fw5hKZv56zSmbrjf',
-    database: 'adityatito'
-})
-
-connection.connect((err) => {
-    if (!err) {
-        console.log("DB Connection Success");
-
-    } else {
-        console.log("Koneksi DB Error")
+// var mysql = require('mysql');
+// var connection = mysql.createConnection({
+module.exports = {
+    HOST: "104.154.173.130",
+    USER: "root",
+    PASSWORD: "Fw5hKZv56zSmbrjf",
+    DB: "adityatito",
+    dialect: "mysql",
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
     }
-})
+}
+    
+// })
 
-module.exports = connection;
+// connection.connect((err) => {
+//     if (!err) {
+//         console.log("DB Connection Success");
+
+//     } else {
+//         console.log("Koneksi DB Error")
+//     }
+// })
+
+// module.exports = connection;

@@ -1,47 +1,63 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const app = express()
 const port = 3000
 app.use(bodyParser.json())
+const messages = require("./modules/messages")
 
-const db = require('./modules/dbCon');
-const provinceRoute = require('./routes/provinces');
-app.use(provinceRoute);
-const smartphoneRoute = require('./routes/smartphone');
-app.use(smartphoneRoute);
+
+const db = require('./modules/dbCon')
+const provinceRoute = require('./routes/provinces')
+app.use(provinceRoute)
+const smartphoneRoute = require('./routes/smartphone')
+app.use(smartphoneRoute)
 global.conDb = db
+global.messages = messages
 
-app.get('/hello', function(request, response){
-    response.send('Selamat Datang Guys')
-})
+const dbSeq = require("./models")
+dbSeq.sequilize.sync({force: false})
+    .then(() => {
+    console.log("Database Synchronized")
+});
 
-app.get('/user/:id', function(request, response){
-    console.log("User ID : " + request.params.id)
-
-    let result = {
-        userid : request.params.id
-    }
-    response.send(result)
-})
-
-app.get('/user/', function(request, response){
-    console.log("User ID : " + request.query.id)
-
-    let result = {
-        userid: request.query.id
-    }
-    response.send(result)
-})
-
-app.post('/user', (req, res) =>{
-    console.log("Client Request : ", JSON.stringify(req.body))
-    let result = req.body
-    result.message = "Hallo"
-    res.send(result)
-})
+require('./routes/users.routes')(app)
 
 console.log("Server running in port : ", port)
-app.listen(3000)
+app.listen(process.env.PORT)
+
+// app.get('/hello', function(request, response){
+//     response.send('Selamat Datang Guys')
+// })
+
+
+
+// app.get('/user/:id', function(request, response){
+//     console.log("User ID : " + request.params.id)
+
+//     let result = {
+//         userid : request.params.id
+//     }
+//     response.send(result)
+// })
+
+// app.get('/user/', function(request, response){
+//     console.log("User ID : " + request.query.id)
+
+//     let result = {
+//         userid: request.query.id
+//     }
+//     response.send(result)
+// })
+
+// app.post('/user', (req, res) =>{
+//     console.log("Client Request : ", JSON.stringify(req.body))
+//     let result = req.body
+//     result.message = "Hallo"
+//     res.send(result)
+// })
+
+
 
 // var modPerkalian = require('./modules/moduleTest');
 // modPerkalian.perkalian(4, 3);
