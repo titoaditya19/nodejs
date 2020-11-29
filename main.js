@@ -6,6 +6,9 @@ const port = 3000
 app.use(bodyParser.json())
 const messages = require("./modules/messages")
 
+const server = require("http").Server(app)
+const io = require("socket.io")(server)
+
 
 const db = require('./modules/dbCon')
 const provinceRoute = require('./routes/provinces')
@@ -22,9 +25,25 @@ dbSeq.sequilize.sync({force: false})
 });
 
 require('./routes/users.routes')(app)
+require('./routes/socket.routes')(app)
 
-console.log("Server running in port : ", port)
-app.listen(process.env.PORT)
+io.on('connection', (socket) => {
+    console.log("user connected");
+    socket.on("disconnect", (reason) => {
+        console.log("User Disconnected", reason);
+    });
+
+    socket.on('chat', (messages) => {
+        io.emit('chat', messages);
+    })
+})
+
+// console.log("Server running in port : ", port)
+// app.listen(process.env.PORT)
+
+server.listen(process.env.PORT, () => {
+    console.log("Server Running On Port : ", process.env.PORT);
+})
 
 // app.get('/hello', function(request, response){
 //     response.send('Selamat Datang Guys')
